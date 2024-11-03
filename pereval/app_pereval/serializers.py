@@ -25,7 +25,7 @@ class AppUserSerializer(serializers.ModelSerializer):
                 phone=self.validated_data.get('phone'),
                 name=self.validated_data.get('name'),
                 surname=self.validated_data.get('surname'),
-                patronymic=self.validated_data.get('otc'),
+                patronymic=self.validated_data.get('patronymic'),
             )
             return new_user
 
@@ -62,18 +62,17 @@ class ImagesSerializer(serializers.ModelSerializer):
         ]
 
 
-class PerevalSerializer(WritableNestedModelSerializer, serializers.HyperlinkedModelSerializer):
+class PerevalSerializer(WritableNestedModelSerializer):
     add_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     user = AppUserSerializer()
     coord_id = CoordsSerializer()
     level = LevelSerializer(allow_null=True)
     images = ImagesSerializer(many=True)
-    id = serializers.HyperlinkedIdentityField(view_name='pereval-detail')
 
     class Meta:
         model = Pereval
         fields = [
-            'id',
+            'url',
             'status',
             'beauty_title',
             'title',
