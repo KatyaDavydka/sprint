@@ -49,6 +49,17 @@ class Pereval(models.Model):
     """
     Модель таблицы Pereval. Имеет отдельные поля status, beauty_title, title, other_titles, connect и add_time.
     """
+
+    new = 'new'
+    pending = 'pending'
+    accepted = 'accepted'
+    rejected = 'rejected'
+    STATUS = [
+        (new, "новый"),
+        (pending, "модератор взял в работу"),
+        (accepted, "модерация прошла успешно"),
+        (rejected, "модерация прошла, информация не принята"),
+    ]
     status = models.CharField(max_length=100, choices=STATUS, default='new', verbose_name='Статус модерации')
     beauty_title = models.CharField(max_length=250, verbose_name='Тип локации')
     title = models.CharField(max_length=250, verbose_name='Название локации')

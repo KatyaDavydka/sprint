@@ -48,3 +48,4 @@ sqlparse==0.4.4
 tornado==6.4
 uritemplate==4.1.1
 urllib3==2.1.0
+python-dotenv==1.0.1
