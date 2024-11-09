@@ -4,7 +4,7 @@ from app_pereval.serializers import PerevalSerializer
 from django.test import TestCase
 from django.urls import reverse
 
-from rest_framework import status
+from rest_framework import status, request
 from rest_framework.test import APITestCase
 
 
@@ -75,7 +75,8 @@ class PerevalAPITestCase(APITestCase):
     def test_get_list(self):
         url = f'{reverse("pereval-list")}?get_all=true'
         response = self.client.get(url)
-        serializer_data = PerevalSerializer([self.pereval_1, self.pereval_2], many=True).data
+        serializer_data = PerevalSerializer([self.pereval_1, self.pereval_2], many=True,
+                                            context={'request': request}).data
         self.assertEqual(serializer_data, response.data)
         self.assertEqual(len(serializer_data), 2)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -83,7 +84,7 @@ class PerevalAPITestCase(APITestCase):
     def test_get_detail(self):
         url = reverse('pereval-detail', args=(self.pereval_1.id,))
         response = self.client.get(url)
-        serializer_data = PerevalSerializer(self.pereval_1).data
+        serializer_data = PerevalSerializer(self.pereval_1, context={'request': request}).data
         self.assertEqual(serializer_data, response.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
@@ -145,13 +146,14 @@ class PerevalSerializerTestCase(TestCase):
             )
         )
         self.image_2 = Images.objects.create(
-            title='imageTitle2',
-            image='image2.jpg',
+            name='imageTitle2',
+            images='image2.jpg',
             pereval=self.pereval_2
         )
 
     def test_get_list(self):
-        serializer_data = PerevalSerializer([self.pereval_1, self.pereval_2], many=True).data
+        serializer_data = PerevalSerializer([self.pereval_1, self.pereval_2], many=True,
+                                            context={'request': request}).data
         expected_data = [
             {
                 'id': self.pereval_1.id,
@@ -181,8 +183,8 @@ class PerevalSerializerTestCase(TestCase):
                 },
                 'images': [
                     {
-                        'title': 'imageTitle1',
-                        'image': 'image1.jpg'
+                        'name': 'imageTitle1',
+                        'images': 'image1.jpg'
                     },
                 ]
             },
@@ -215,8 +217,8 @@ class PerevalSerializerTestCase(TestCase):
                 },
                 'images': [
                     {
-                        'title': 'imageTitle2',
-                        'image': 'image2.jpg'
+                        'name': 'imageTitle2',
+                        'images': 'image2.jpg'
                     },
                 ]
             }
